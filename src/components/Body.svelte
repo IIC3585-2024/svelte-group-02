@@ -1,36 +1,93 @@
 <script>
-  // $: projectNameInput = "";
-  // $: projectDescriptionInput = "";
   import {v4 as uuidv4} from 'uuid';
   import {tasks} from '../tasks';
   import Task from './Task.svelte';
   import {onMount} from 'svelte';
   import TaskApi from '../TasksApi';
   import NewTask from './NewTask.svelte';
+  import {time} from '../time.js';
 
-    function handleNewTask(e){
-      $tasks = [ {id: uuidv4(), project: e.detail.project, name: e.detail.name, duration: e.detail.duration}, ...$tasks];
-      TaskApi.saveTasks($tasks);
+  import { onDestroy } from 'svelte';
 
+    let lapse = 0;
+	// previous is set to record the time accumulated before the pause button is pressed
+    let previous = 0;
+
+    // unsubscribe is set to refer to the function used to unsubscribe from the store
+    let unsubscribe;
+
+
+    function handleStartTask(e){
+      unsubscribe = time.subscribe(value => {
+		    lapse = value + previous;
+	    });
+      console.log("comenzando", e.detail);
     }
+        function terminate() {
+        // check if unsubscribe is truthy (this to cover the situation in which the stop button is pressed after the pause button)
+        if (unsubscribe) {
+            unsubscribe();
+            unsubscribe = null;
+        }
+    }
+
+
+    function handleEndTask(e){
+      console.log("terminando", lapse);
+      $tasks = [ {id: uuidv4(), project: e.detail.project, name: e.detail.name, duration: lapse}, ...$tasks];
+      lapse = 0;
+      previous = 0;
+
+      laps = [];
+      terminate();
+      TaskApi.saveTasks($tasks);
+    }
+
+
+
+    function handlePauseTask(e){
+              previous = lapse;
+        terminate();
+      console.log("pausando", e.detail);
+    }
+    
+    $:subscription = !!unsubscribe;
+
+    $:lapsed = !!lapse;
+    let laps = [];
+
+    $: timer = lapse;
+
+
+    
 
     function handleDeleteTask(e){
       $tasks = $tasks.filter(task => task.id !== e.detail.id);
+      TaskApi.saveTasks($tasks);
+
+
     }
 
     function handleEditTask(e){
       console.log("editando", e.detail);
 
     }
-    
+
+
+
     onMount(async () => {
         $tasks = await TaskApi.getTasks();
 
     });
 
+    onDestroy(() => {
+        terminate();
+    });
+
 </script>
 
 
+<!-- svelte-ignore non-top-level-reactive-declaration -->
 <style>
   .form-group {
     display: flex;
@@ -79,7 +136,14 @@
 <div class="body-time">
 
     <div class="form-group">
-      <NewTask on:newTask={handleNewTask}/>
+      <NewTask 
+      on:endTask={handleEndTask}
+      on:pauseTask={handlePauseTask}
+      on:startTask={handleStartTask}
+      subscription={subscription}
+      lapsed={lapsed}
+      time={timer}
+      />
     </div>
     <div class="container-tasks">
       <table>
@@ -87,7 +151,7 @@
           <th>Proyecto</th>
           <th>Tarea</th>
           <th>Duración</th>
-          <th>--------</th>
+          <th>------</th>
         </tr>
           {#each $tasks as task (task)}
             <Task

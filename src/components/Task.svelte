@@ -1,5 +1,6 @@
 <script>
   import {createEventDispatcher} from 'svelte';
+  import {formatTime} from '../utils';
   export let id, project, name, duration;
   const dispatch = createEventDispatcher();
 
@@ -10,6 +11,7 @@
   function triggerDelete(){
     dispatch('delete', {id});
   }
+
 </script>
 
 <style>
@@ -32,9 +34,9 @@
 <tr class="task" >
     <td>{project}</td>
     <td>{name}</td>
-    <td>{duration}</td>
+    <td>{formatTime(duration)}</td>
     <td>
-        <button class="btn btn-primary" on:click={triggerEdit}>&gt</button>
+        <button class="btn btn-primary" on:click={triggerEdit}>&#9658</button>
         <button class="btn btn-primary" on:click={triggerDelete}>X</button>
     </td>
 </tr>
