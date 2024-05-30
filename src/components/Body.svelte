@@ -80,9 +80,6 @@
 
     <div class="form-group">
       <NewTask on:newTask={handleNewTask}/>
-      <!-- <input type="text" class="form-control" id="projectName" bind:value={projectNameInput}>
-      <input type="text" class="form-control" id="projectDescription" bind:value={projectDescriptionInput}>
-      <button class="btn btn-primary">Comenzar</button> -->
     </div>
     <div class="container-tasks">
       <table>

@@ -8,6 +8,7 @@
     const dispatch = createEventDispatcher();
     
     function handleNewTask(e){
+        
         dispatch('newTask', {project, name, duration});
     }
 </script>
