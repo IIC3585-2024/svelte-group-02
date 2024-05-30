@@ -1,6 +1,7 @@
 <script>
   import Header from "../components/Header.svelte";
   import Body from "../components/Body.svelte";
+  import Graph from "../components/Graph.svelte";
 //   import List from "./components/List.svelte";
 </script>
 
@@ -21,5 +22,8 @@
 <div class="container">
   <Header />
   <Body />
+
+
   <!-- <List /> -->
 </div>
+  <Graph />

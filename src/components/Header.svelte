@@ -1,8 +1,4 @@
 <script>
-//   import { items } from "../stores";
-
-//   $: itemCount = $items.length;
-//   $: completedItemCount = $items.filter((item) => item.complete).length;
   import {tasks} from '../tasks';
   $: tasksCount = $tasks.length;
  
