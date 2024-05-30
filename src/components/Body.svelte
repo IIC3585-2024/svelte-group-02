@@ -10,16 +10,26 @@
   import { onDestroy } from 'svelte';
 
     let lapse = 0;
+    let name = '';
+    let project = '';
 	// previous is set to record the time accumulated before the pause button is pressed
     let previous = 0;
+    let duration = 0;
 
     // unsubscribe is set to refer to the function used to unsubscribe from the store
     let unsubscribe;
-
+    let changingTask = false;
 
     function handleStartTask(e){
+      if (!changingTask){
+        if ($tasks.filter(task => task.name == e.detail.name && task.project == e.detail.project).length > 0){
+          alert("Ya existe una tarea con ese nombre en ese proyecto");
+        return;
+      };
+      }
+
       unsubscribe = time.subscribe(value => {
-		    lapse = value + previous;
+		    lapse = value + previous ;
 	    });
       console.log("comenzando", e.detail);
     }
@@ -34,13 +44,17 @@
 
     function handleEndTask(e){
       console.log("terminando", lapse);
+      $tasks = $tasks.filter(task => task.name != e.detail.name || task.project != e.detail.project);
       $tasks = [ {id: uuidv4(), project: e.detail.project, name: e.detail.name, duration: lapse}, ...$tasks];
+      TaskApi.saveTasks($tasks);
       lapse = 0;
       previous = 0;
-
       laps = [];
       terminate();
-      TaskApi.saveTasks($tasks);
+      name = '';
+      project = '';
+      changingTask = false;
+      duration = 0;
     }
 
 
@@ -64,11 +78,14 @@
     function handleDeleteTask(e){
       $tasks = $tasks.filter(task => task.id !== e.detail.id);
       TaskApi.saveTasks($tasks);
-
-
     }
 
     function handleEditTask(e){
+      name = e.detail.name;
+      project = e.detail.project;
+      previous = e.detail.duration;
+      changingTask = true;
+      handleStartTask(e);
       console.log("editando", e.detail);
 
     }
@@ -143,6 +160,9 @@
       subscription={subscription}
       lapsed={lapsed}
       time={timer}
+      name={name}
+      duration={duration}
+      project={project}
       />
     </div>
     <div class="container-tasks">

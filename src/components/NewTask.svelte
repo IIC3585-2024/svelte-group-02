@@ -2,11 +2,11 @@
     import { createEventDispatcher } from 'svelte';
     import { formatTime } from '../utils';
 
-    let project = '';
-    let name = '';
-    let duration = 0;
+    // let project = '';
+    // let name = '';
+    // let duration = 0;
 
-    export let subscription, lapsed, time;
+    export let subscription, lapsed, time, project, name, duration;
    
     const dispatch = createEventDispatcher();
 
@@ -16,6 +16,7 @@
 
     function handleStartTask(e){
         e.preventDefault();
+        if(!project || !name) return;
         dispatch('startTask', {project, name, duration});
     }
 
@@ -23,6 +24,7 @@
         dispatch('endTask', {project, name, duration});
         project = '';
         name = '';
+        duration = 0;
     }
 
 
