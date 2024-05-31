@@ -1,14 +1,12 @@
 <script>
-  import Chart from 'svelte-frappe-charts';
 
-  let data = {
-    labels: ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'],
-    datasets: [
-      {
-        values: [10, 12, 3, 9, 8, 15, 9]
-      }
-    ]
-  };
+
+  import Bar from 'svelte-frappe-charts';
+
+  export let data, options;
+
+  
 </script>
 
-<Chart class="Graph" data={data} type="line" />
+<Bar class="chart" data={data} options={options} type="bar" />
+
