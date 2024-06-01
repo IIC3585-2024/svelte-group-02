@@ -1,4 +1,6 @@
 <script>
+	import { log } from './../../node_modules/@sveltejs/vite-plugin-svelte/src/utils/log.js';
+	import PopulateButton from './PopulateButton.svelte';
   import {v4 as uuidv4} from 'uuid';
   import {tasks} from '../tasks';
   import Task from './Task.svelte';
@@ -9,102 +11,103 @@
 
   import { onDestroy } from 'svelte';
 
-    let lapse = 0;
-    let name = '';
-    let project = '';
+  let lapse = 0;
+  let name = '';
+  let project = '';
 	// previous is set to record the time accumulated before the pause button is pressed
-    let previous = 0;
-    let duration = 0;
+  let previous = 0;
+  let duration = 0;
 
-    // unsubscribe is set to refer to the function used to unsubscribe from the store
-    let unsubscribe;
-    let changingTask = false;
+  // unsubscribe is set to refer to the function used to unsubscribe from the store
+  let unsubscribe;
+  let changingTask = false;
 
-    function handleStartTask(e){
-      if (!changingTask){
-        if ($tasks.filter(task => task.name == e.detail.name && task.project == e.detail.project).length > 0){
-          alert("Ya existe una tarea con ese nombre en ese proyecto");
-        return;
-      };
-      }
-
-      unsubscribe = time.subscribe(value => {
-		    lapse = value + previous ;
-	    });
-      console.log("comenzando", e.detail);
-    }
-        function terminate() {
-        // check if unsubscribe is truthy (this to cover the situation in which the stop button is pressed after the pause button)
-        if (unsubscribe) {
-            unsubscribe();
-            unsubscribe = null;
-        }
-    }
-
-
-    function handleEndTask(e){
-      console.log("terminando", lapse);
-      $tasks = $tasks.filter(task => task.name != e.detail.name || task.project != e.detail.project);
-      $tasks = [ {id: uuidv4(), project: e.detail.project, name: e.detail.name, duration: lapse}, ...$tasks];
-      TaskApi.saveTasks($tasks);
-      lapse = 0;
-      previous = 0;
-      laps = [];
-      terminate();
-      name = '';
-      project = '';
-      changingTask = false;
-      duration = 0;
-    }
-
-
-
-    function handlePauseTask(e){
-              previous = lapse;
-        terminate();
-      console.log("pausando", e.detail);
-    }
-    
-    $:subscription = !!unsubscribe;
-
-    $:lapsed = !!lapse;
-    let laps = [];
-
-    $: timer = lapse;
-
-
-    
-
-    function handleDeleteTask(e){
-      $tasks = $tasks.filter(task => task.id !== e.detail.id);
-      TaskApi.saveTasks($tasks);
-    }
-
-    function handleEditTask(e){
-      name = e.detail.name;
-      project = e.detail.project;
-      previous = e.detail.duration;
-      changingTask = true;
-      handleStartTask(e);
-      console.log("editando", e.detail);
-
-    }
-
-
-
-    onMount(async () => {
-        $tasks = await TaskApi.getTasks();
-
+  function handleImportTasks(event) {
+    const importedTasks = event.detail.exampleTasks;
+    importedTasks.forEach(task => {
+      $tasks = $tasks.filter(t => t.name != task.name || t.project != task.project);
     });
+    $tasks = [ ...$tasks, ...importedTasks]
+    TaskApi.saveTasks(importedTasks);
+    lapse = 0;
+    previous = 0;
+    laps = [];
+    terminate();
+    name = '';
+    project = '';
+    changingTask = false;
+    duration = 0;
+  }
 
-    onDestroy(() => {
-        terminate();
-    });
+  function handleStartTask(e){
+    if (!changingTask){
+      if ($tasks.filter(task => task.name == e.detail.name && task.project == e.detail.project).length > 0){
+        alert("Ya existe una tarea con ese nombre en ese proyecto");
+      return;
+    };
+    }
+    unsubscribe = time.subscribe(value => {
+	    lapse = value + previous ;
+	  });
+    console.log("comenzando", e.detail);
+  }
 
+  function terminate() {
+    if (unsubscribe) {
+      unsubscribe();
+      unsubscribe = null;
+    }
+  }
+
+  function handleEndTask(e){
+    console.log("terminando", lapse);
+    $tasks = $tasks.filter(task => task.name != e.detail.name || task.project != e.detail.project);
+    $tasks = [ {id: uuidv4(), project: e.detail.project, name: e.detail.name, duration: lapse}, ...$tasks];
+    TaskApi.saveTasks($tasks);
+    lapse = 0;
+    previous = 0;
+    laps = [];
+    terminate();
+    name = '';
+    project = '';
+    changingTask = false;
+    duration = 0;
+  }
+
+  function handlePauseTask(e) {
+    previous = lapse;
+    terminate();
+    console.log("pausando", e.detail);
+  }
+  
+  $:subscription = !!unsubscribe;
+  $:lapsed = !!lapse;
+  let laps = [];
+  $: timer = lapse;
+
+  function handleDeleteTask(e){
+    $tasks = $tasks.filter(task => task.id !== e.detail.id);
+    TaskApi.saveTasks($tasks);
+  }
+
+  function handleEditTask(e){
+    name = e.detail.name;
+    project = e.detail.project;
+    previous = e.detail.duration;
+    changingTask = true;
+    handleStartTask(e);
+    console.log("editando", e.detail);
+  }
+
+  onMount(async () => {
+    $tasks = await TaskApi.getTasks();
+  });
+
+  onDestroy(() => {
+    terminate();
+  });
 </script>
 
-
-<!-- svelte-ignore non-top-level-reactive-declaration -->
 <style>
   .form-group {
     display: flex;
@@ -112,6 +115,7 @@
     justify-content: space-between;
     gap: 10px;
   }
+
   .body-time {
     display: flex;
     flex-direction: column;
@@ -119,51 +123,54 @@
     gap: 10px;
     background: #009579;
   }
-  .container-tasks {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 0;
-      background: rgba(255, 255, 255, 0.8);
-      border-radius: 5px;
 
+  .container-tasks {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
   }
+
   table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: center;
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
   }
+
   th{
-      border: 1px  dashed gray;
-      padding: 10px;
+    border: 1px  dashed gray;
+    padding: 10px;
   }
+
   table tr:first-child th {
-  border-top: 0;
+    border-top: 0;
   }
+
   table tr th:first-child {
     border-left: 0;
   }
+
   table tr th:last-child {
     border-right: 0;
   }
-
-
 </style>
 
 <div class="body-time">
-
     <div class="form-group">
       <NewTask 
-      on:endTask={handleEndTask}
-      on:pauseTask={handlePauseTask}
-      on:startTask={handleStartTask}
-      subscription={subscription}
-      lapsed={lapsed}
-      time={timer}
-      name={name}
-      duration={duration}
-      project={project}
+        on:endTask={handleEndTask}
+        on:pauseTask={handlePauseTask}
+        on:startTask={handleStartTask}
+        subscription={subscription}
+        lapsed={lapsed}
+        time={timer}
+        name={name}
+        duration={duration}
+        project={project}
       />
+    <PopulateButton on:importTasks={handleImportTasks} />
     </div>
     <div class="container-tasks">
       <table>
@@ -173,18 +180,16 @@
           <th>Duración</th>
           <th>------</th>
         </tr>
-          {#each $tasks as task (task)}
-            <Task
-              id={task.id} 
-              project={task.project}
-              name={task.name}
-              duration={task.duration}
-              on:delete={handleDeleteTask}
-              on:edit={handleEditTask}  
-            />
-          {/each}
-        
+        {#each $tasks as task (task)}
+          <Task
+            id={task.id} 
+            project={task.project}
+            name={task.name}
+            duration={task.duration}
+            on:delete={handleDeleteTask}
+            on:edit={handleEditTask}  
+          />
+        {/each}
       </table>
     </div>
-
 </div>

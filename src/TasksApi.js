@@ -1,9 +1,10 @@
 export default class TaskApi{
-    static async getTasks(){
+    static async getTasks() {
         return JSON.parse(localStorage.getItem("tasks") || "[]") ;
     }
 
-    static async saveTasks(tasks){
+    static async saveTasks(tasks) {
+        console.log(tasks)
         localStorage.setItem("tasks", JSON.stringify(tasks));
     }
 }

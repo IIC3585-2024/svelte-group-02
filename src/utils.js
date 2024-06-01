@@ -1,11 +1,13 @@
+import {v4 as uuidv4} from 'uuid';
+
 // utility functions used in the project
 // prepend a zero to integers smaller than 10 (used for the second and minute values)
 function zeroPadded(number) {
-    return number >= 10 ? number.toString() : `0${number}`;
+  return number >= 10 ? number.toString() : `0${number}`;
 }
 // consider the last digit of the input number (used for the tenths of seconds)
 function lastDigit(number) {
-    return number.toString()[number.toString().length - 1];
+  return number.toString()[number.toString().length - 1];
 }
 
 /* format time in the following format
@@ -13,8 +15,35 @@ mm:ss:t
 zero padded minutes, zero padded seconds, tenths of seconds
 */
 export function formatTime(milliseconds) {
-    const mm = zeroPadded(Math.floor(milliseconds / 1000 / 60));
-    const ss = zeroPadded(Math.floor(milliseconds / 1000) % 60);
-    const hh = zeroPadded(Math.floor(milliseconds / 1000 / 60 / 60));
-    return `${hh}:${mm}:${ss}`;
+  const mm = zeroPadded(Math.floor(milliseconds / 1000 / 60));
+  const ss = zeroPadded(Math.floor(milliseconds / 1000) % 60);
+  const hh = zeroPadded(Math.floor(milliseconds / 1000 / 60 / 60));
+  return `${hh}:${mm}:${ss}`;
+}
+
+export async function importExampleTasks() {
+  try {
+    let projectsWithTasks = [];
+    const usersResponse = await fetch('https://jsonplaceholder.typicode.com/users');
+    const users = await usersResponse.json();
+    
+    const todosResponse = await fetch('https://jsonplaceholder.typicode.com/todos');
+    const todos = await todosResponse.json();
+
+    const randomUser = users[Math.floor(Math.random() * users.length)];
+    todos.filter(todo => todo.userId === randomUser.id)
+      .forEach((todo) => {
+        projectsWithTasks.push({
+          id: uuidv4(),
+          project: randomUser.company.name,
+          name: todo.title,
+          duration: `${Math.floor(Math.random() * 1000000) + 1000}`
+        });
+      });
+
+    return projectsWithTasks;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }
