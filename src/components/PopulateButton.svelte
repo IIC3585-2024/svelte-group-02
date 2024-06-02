@@ -1,6 +1,6 @@
 <script>
 import { createEventDispatcher } from 'svelte';
-import { importExampleTasks } from '../utils'
+import { importExampleTasks } from '$lib/utils'
 
 const dispatch = createEventDispatcher();
 

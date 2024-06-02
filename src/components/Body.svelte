@@ -1,14 +1,12 @@
 <script>
-	import { log } from './../../node_modules/@sveltejs/vite-plugin-svelte/src/utils/log.js';
 	import PopulateButton from './PopulateButton.svelte';
-  import {v4 as uuidv4} from 'uuid';
-  import {tasks} from '../tasks';
+  import { v4 as uuidv4 } from 'uuid';
+  import { tasks } from '$lib/tasks';
   import Task from './Task.svelte';
-  import {onMount} from 'svelte';
-  import TaskApi from '../TasksApi';
+  import { onMount } from 'svelte';
+  import TaskApi from '$lib/TasksApi';
   import NewTask from './NewTask.svelte';
-  import {time} from '../time.js';
-
+  import { time } from '$lib/time.js';
   import { onDestroy } from 'svelte';
 
   let lapse = 0;
@@ -21,6 +19,7 @@
   // unsubscribe is set to refer to the function used to unsubscribe from the store
   let unsubscribe;
   let changingTask = false;
+  let timerOn = false;
 
   function handleImportTasks(event) {
     const importedTasks = event.detail.exampleTasks;
@@ -29,23 +28,22 @@
     });
     $tasks = [ ...$tasks, ...importedTasks]
     TaskApi.saveTasks(importedTasks);
-    lapse = 0;
-    previous = 0;
-    laps = [];
-    terminate();
-    name = '';
-    project = '';
-    changingTask = false;
-    duration = 0;
   }
 
-  function handleStartTask(e){
+  function handleStartTask(e) {
+    if (timerOn) {
+      alert("Ya hay una tarea en curso");
+      return;
+    }
+
     if (!changingTask){
       if ($tasks.filter(task => task.name == e.detail.name && task.project == e.detail.project).length > 0){
         alert("Ya existe una tarea con ese nombre en ese proyecto");
-      return;
-    };
+        return;
+      };
     }
+
+    timerOn = true;
     unsubscribe = time.subscribe(value => {
 	    lapse = value + previous ;
 	  });
@@ -57,6 +55,7 @@
       unsubscribe();
       unsubscribe = null;
     }
+    timerOn = false;
   }
 
   function handleEndTask(e){
@@ -124,6 +123,12 @@
     background: #009579;
   }
 
+  .populate-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .container-tasks {
     display: flex;
     justify-content: center;
@@ -170,7 +175,9 @@
         duration={duration}
         project={project}
       />
-    <PopulateButton on:importTasks={handleImportTasks} />
+    </div>
+    <div class="populate-div">
+      <PopulateButton on:importTasks={handleImportTasks} />
     </div>
     <div class="container-tasks">
       <table>

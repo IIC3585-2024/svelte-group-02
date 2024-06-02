@@ -1,6 +1,6 @@
 <script>
     import { createEventDispatcher } from 'svelte';
-    import { formatTime } from '../utils';
+    import { formatTime } from '$lib/utils';
 
     // let project = '';
     // let name = '';

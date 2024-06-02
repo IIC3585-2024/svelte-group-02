@@ -2,8 +2,8 @@
   import Header from "../components/Header.svelte";
   import Body from "../components/Body.svelte";
   import Chart from "../components/Graph.svelte";
-  import { tasks } from '../tasks';
-  import TaskApi from '../TasksApi';
+  import { tasks } from '$lib/tasks';
+  import TaskApi from '$lib/TasksApi';
   import { onMount } from 'svelte';
 
   function obtainProjectLabels(tasks){
@@ -68,7 +68,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 500px;
+    width: 600px;
     background: #009579;
   }
   .main{
