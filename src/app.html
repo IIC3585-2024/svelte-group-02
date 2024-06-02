@@ -1,0 +1,58 @@
+<!doctype html>
+
+<!-- Codigo basado en : https://svelte.dev/repl/591aff801e1d47498afdc2738fea4485?version=4.2.17 y en  https://www.youtube.com/watch?v=s1B3kadwhFU -->
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		%sveltekit.head%
+	</head>
+	<style>
+		body {
+			font-family: 'Helvetica Neue', sans-serif;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			background: #F2F6F8;
+		}
+		.container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			background: white;
+			border-radius: 5px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			padding: 20px;
+		}
+		.container h1 {
+			margin: 0 0 10px;
+		}
+		.container p {
+			margin: 0;
+			color: #333;
+		}
+		.container a {
+			color: #0070f3;
+			text-decoration: none;
+		}
+		.container a:hover {
+			text-decoration: underline;
+		}
+		.container img {
+			margin-top: 20px;
+			width: 100%;
+			max-width: 300px;
+		}
+		.container img:hover {
+			transform: scale(1.1);
+		}
+	</style>
+	<body data-sveltekit-preload-data="hover">
+		<div>%sveltekit.body%</div>
+	</body>
+</html>
