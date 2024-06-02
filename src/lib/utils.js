@@ -37,7 +37,7 @@ export async function importExampleTasks() {
           id: uuidv4(),
           project: randomUser.company.name,
           name: todo.title,
-          duration: `${Math.floor(Math.random() * 1000000) + 1000}`
+          duration: Math.floor(Math.random() * 1000000) + 1000
         });
       });
 

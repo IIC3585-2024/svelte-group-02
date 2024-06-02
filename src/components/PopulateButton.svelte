@@ -6,6 +6,7 @@ const dispatch = createEventDispatcher();
 
 async function importTasks() {
     const exampleTasks = await importExampleTasks();
+	alert('Tareas de ejemplo importadas');
     dispatch('importTasks', {
         exampleTasks: exampleTasks
     });
