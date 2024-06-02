@@ -1,6 +1,6 @@
 <script>
-  import {createEventDispatcher} from 'svelte';
-  import {formatTime} from '$lib/utils';
+  import { createEventDispatcher } from 'svelte';
+  import { formatTime } from '$lib/utils';
   export let id, project, name, duration;
   const dispatch = createEventDispatcher();
 
