@@ -1,7 +1,6 @@
 <script>
-  import {tasks} from '../tasks';
+  import { tasks } from '$lib/tasks';
   $: tasksCount = $tasks.length;
- 
 </script>
 
 <style>
@@ -13,18 +12,18 @@
     color: #eeeeee;
     font-weight: bold;
     font-size: 1.5em;
-    }
-    h3{
-      font-size: 0.9em;
-      opacity: 0.8;
-    }
+  }
+
+  h3 {
+    font-size: 0.9em;
+    opacity: 0.8;
+    text-align: center;
+  }
 </style>
 
 <div class="header">
   <div>
-    <h2>Bienvenido a TimeTracker </h2>
-    <h3> Cantidad de Tareas: {tasksCount} </h3>
+    <h2>Bienvenido a TimeTracker</h2>
+    <h3>Cantidad de Tareas: {tasksCount}</h3>
   </div>
-
-  <!-- <span> {completedItemCount}/{itemCount} </span> -->
 </div>
