@@ -33,6 +33,17 @@
     align-items: center;
     gap: 10px;
   }
+
+  input {
+    border-radius: 5px;
+  }
+
+  p {
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 15px;
+    color: #000000;
+    font-weight: 700;
+  }
 </style>
 
 

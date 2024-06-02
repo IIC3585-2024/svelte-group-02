@@ -17,12 +17,13 @@
   h3 {
     font-size: 0.9em;
     opacity: 0.8;
+    text-align: center;
   }
 </style>
 
 <div class="header">
   <div>
-    <h2>Bienvenido a TimeTracker </h2>
-    <h3> Cantidad de Tareas: {tasksCount} </h3>
+    <h2>Bienvenido a TimeTracker</h2>
+    <h3>Cantidad de Tareas: {tasksCount}</h3>
   </div>
 </div>
