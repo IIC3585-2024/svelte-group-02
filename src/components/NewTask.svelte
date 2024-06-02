@@ -1,50 +1,43 @@
 <script>
-    import { createEventDispatcher } from 'svelte';
-    import { formatTime } from '$lib/utils';
+  import { createEventDispatcher } from 'svelte';
+  import { formatTime } from '$lib/utils';
+  // let project = '';
+  // let name = '';
+  // let duration = 0;
+  export let subscription, lapsed, time, project, name, duration;
+  const dispatch = createEventDispatcher();
 
-    // let project = '';
-    // let name = '';
-    // let duration = 0;
+  function handlePauseTask(e){
+    dispatch('pauseTask', {project, name, duration});
+  }
 
-    export let subscription, lapsed, time, project, name, duration;
-   
-    const dispatch = createEventDispatcher();
+  function handleStartTask(e){
+    e.preventDefault();
+    if (!project || !name) return;
+    dispatch('startTask', {project, name, duration});
+  }
 
-    function handlePauseTask(e){
-        dispatch('pauseTask', {project, name, duration});
-    }
-
-    function handleStartTask(e){
-        e.preventDefault();
-        if(!project || !name) return;
-        dispatch('startTask', {project, name, duration});
-    }
-
-    function handleEndTask(e){
-        dispatch('endTask', {project, name, duration});
-        project = '';
-        name = '';
-        duration = 0;
-    }
-
-
-
-
+  function handleEndTask(e){
+    dispatch('endTask', {project, name, duration});
+    project = '';
+    name = '';
+    duration = 0;
+  }
 </script>
-<style>
-    .controls{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        gap: 10px;
-    }
 
+<style>
+  .controls{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
 </style>
 
 
-<input type="text" class="form-control" id="projectName" bind:value={project}>
-<input type="text" class="form-control" id="projectDescription" bind:value={name}>
+<input type="text" class="form-control" id="projectName" placeholder="Proyecto" bind:value={project}>
+<input type="text" class="form-control" id="projectDescription" placeholder="Tarea" bind:value={name}>
 <div class="controls">
     {#if subscription }
         <button class="btn btn-primary" on:click={handleEndTask}>&#x23F9</button>
@@ -57,8 +50,5 @@
     {:else}
         <button class="btn btn-primary" on:click={handleStartTask}>&#x23F5</button>
     {/if}
-    
-    
-
 </div>
 

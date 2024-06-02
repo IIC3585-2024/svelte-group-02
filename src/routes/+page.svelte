@@ -68,7 +68,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 600px;
+    width: 700px;
     background: #009579;
   }
   .main{

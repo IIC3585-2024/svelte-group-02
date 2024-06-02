@@ -37,7 +37,7 @@
     }
 
     if (!changingTask){
-      if ($tasks.filter(task => task.name == e.detail.name && task.project == e.detail.project).length > 0){
+      if ($tasks.filter(task => task.name == e.detail.name.trim() && task.project == e.detail.project.trim()).length > 0){
         alert("Ya existe una tarea con ese nombre en ese proyecto");
         return;
       };
@@ -111,8 +111,9 @@
   .form-group {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     gap: 10px;
+    padding: 0px 80px 0px 80px;
   }
 
   .body-time {

@@ -13,7 +13,27 @@ async function importTasks() {
 </script>
   
 <style>
+  button {
+	background-color:#00957a;
+	border-radius:10px;
+	border:2px solid #ffffff;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-size:15px;
+	font-weight:bold;
+	padding:15px 14px;
+	text-decoration:none;
+  }
 
+  button:hover {
+	background-color:#117964;
+  }
+
+  button:active {
+	position:relative;
+	top:1px;
+  }
 </style>
   
 <button on:click={importTasks}>
