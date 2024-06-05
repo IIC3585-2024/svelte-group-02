@@ -10,9 +10,11 @@ mm:ss:t
 zero padded minutes, zero padded seconds, tenths of seconds
 */
 export function formatTime(milliseconds) {
-  const mm = zeroPadded(Math.floor(milliseconds / 1000 / 60));
-  const ss = zeroPadded(Math.floor(milliseconds / 1000) % 60);
-  const hh = zeroPadded(Math.floor(milliseconds / 1000 / 60 / 60));
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const ss = zeroPadded(totalSeconds % 60);
+  const totalMinutes = Math.floor(totalSeconds / 60);
+  const mm = zeroPadded(totalMinutes % 60);
+  const hh = zeroPadded(Math.floor(totalMinutes / 60));
   return `${hh}:${mm}:${ss}`;
 }
 

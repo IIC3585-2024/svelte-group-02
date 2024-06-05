@@ -19,7 +19,9 @@
       let time = 0
       $tasks.forEach(task => {
         if (task.project == element) {
-          time += Math.floor(task.duration / 1000)
+          const totalSeconds = Math.floor(task.duration / 1000)
+          const totalMinutes = Math.floor(totalSeconds / 60);
+          time += totalMinutes
         }
       })
       projectTimes.push(time)
@@ -36,7 +38,7 @@
       labels: obtainProjectLabels($tasks),
       datasets: [
         {
-          name:"segundos",
+          name:"minutos",
           values: obtainProjectTimes(obtainProjectLabels($tasks))
         }
       ]
