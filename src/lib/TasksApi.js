@@ -4,7 +4,6 @@ export default class TaskApi {
   }
 
   static async saveTasks(tasks) {
-    console.log(tasks)
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }
 }

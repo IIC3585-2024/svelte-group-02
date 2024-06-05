@@ -47,7 +47,6 @@
     unsubscribe = time.subscribe(value => {
 	    lapse = value + previous ;
 	  });
-    console.log("comenzando", e.detail);
   }
 
   function terminate() {
@@ -58,8 +57,7 @@
     timerOn = false;
   }
 
-  function handleEndTask(e){
-    console.log("terminando", lapse);
+  function handleEndTask(e) {
     $tasks = $tasks.filter(task => task.name != e.detail.name || task.project != e.detail.project);
     $tasks = [ {id: uuidv4(), project: e.detail.project, name: e.detail.name, duration: lapse}, ...$tasks];
     TaskApi.saveTasks($tasks);
@@ -76,7 +74,6 @@
   function handlePauseTask(e) {
     previous = lapse;
     terminate();
-    console.log("pausando", e.detail);
   }
   
   $:subscription = !!unsubscribe;
@@ -84,18 +81,17 @@
   let laps = [];
   $: timer = lapse;
 
-  function handleDeleteTask(e){
+  function handleDeleteTask(e) {
     $tasks = $tasks.filter(task => task.id !== e.detail.id);
     TaskApi.saveTasks($tasks);
   }
 
-  function handleEditTask(e){
+  function handleEditTask(e) {
     name = e.detail.name;
     project = e.detail.project;
     previous = e.detail.duration;
     changingTask = true;
     handleStartTask(e);
-    console.log("editando", e.detail);
   }
 
   onMount(async () => {

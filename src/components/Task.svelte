@@ -4,11 +4,11 @@
   export let id, project, name, duration;
   const dispatch = createEventDispatcher();
 
-  function triggerEdit(){
+  function triggerEdit() {
     dispatch('edit', {id, project, name, duration});
   }
 
-  function triggerDelete(){
+  function triggerDelete() {
     dispatch('delete', {id});
   }
 

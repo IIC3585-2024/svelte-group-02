@@ -1,23 +1,20 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { formatTime } from '$lib/utils';
-  // let project = '';
-  // let name = '';
-  // let duration = 0;
   export let subscription, lapsed, time, project, name, duration;
   const dispatch = createEventDispatcher();
 
-  function handlePauseTask(e){
+  function handlePauseTask(e) {
     dispatch('pauseTask', {project, name, duration});
   }
 
-  function handleStartTask(e){
+  function handleStartTask(e) {
     e.preventDefault();
     if (!project || !name) return;
     dispatch('startTask', {project, name, duration});
   }
 
-  function handleEndTask(e){
+  function handleEndTask(e) {
     dispatch('endTask', {project, name, duration});
     project = '';
     name = '';

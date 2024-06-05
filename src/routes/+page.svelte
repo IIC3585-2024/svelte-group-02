@@ -6,47 +6,40 @@
   import TaskApi from '$lib/TasksApi';
   import { onMount } from 'svelte';
 
-  function obtainProjectLabels(tasks){
+  function obtainProjectLabels(tasks) {
     let projectLabels = tasks.map(item => item.project)
     projectLabels = new Set(projectLabels)
     projectLabels = [...projectLabels.keys()]
     return projectLabels
-
   }
-  function obtainProjectTimes(projectLabels){
+
+  function obtainProjectTimes(projectLabels) {
     let projectTimes = []
     projectLabels.forEach(element => {
       let time = 0
-      $tasks.forEach(task =>{
-        if (task.project == element){
-            time += Math.floor(task.duration / 1000)
+      $tasks.forEach(task => {
+        if (task.project == element) {
+          time += Math.floor(task.duration / 1000)
         }
-      }
-      )
+      })
       projectTimes.push(time)
     });
     return projectTimes
   }
 
-
     onMount(async () => {
         $tasks = await TaskApi.getTasks();
     });
 
-    console.log(obtainProjectLabels($tasks))
-    console.log(obtainProjectTimes(obtainProjectLabels($tasks)))
-
-
 
     $: data = {
-    labels: obtainProjectLabels($tasks),
-    datasets: [
-      {
-        name:"segundos",
-        values: obtainProjectTimes(obtainProjectLabels($tasks))
-      }
-    ]
-    
+      labels: obtainProjectLabels($tasks),
+      datasets: [
+        {
+          name:"segundos",
+          values: obtainProjectTimes(obtainProjectLabels($tasks))
+        }
+      ]
     };
     
     $: options = {
@@ -58,9 +51,6 @@
       xIsSeries: true
     }
   };
-
-
-//   import List from "./components/List.svelte";
 </script>
 
 <style>
@@ -71,7 +61,7 @@
     width: 700px;
     background: #009579;
   }
-  .main{
+  .main {
         max-height: 100vh;
   }
 
