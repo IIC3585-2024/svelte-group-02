@@ -27,7 +27,7 @@
       $tasks = $tasks.filter(t => t.name != task.name || t.project != task.project);
     });
     $tasks = [ ...$tasks, ...importedTasks]
-    TaskApi.saveTasks(importedTasks);
+    TaskApi.saveTasks($tasks);
   }
 
   function handleStartTask(e) {
